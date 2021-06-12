@@ -7,11 +7,13 @@ var engine, world;
 var box1, pig1,pig3;
 var backgroundImg,platform;
 var bird, slingshot;
+var bg = "sprites/bg.png";
 
 var gameState = "onSling";
 
 function preload() {
-    backgroundImg = loadImage("sprites/bg.png");
+   
+    changeBackground() ;
 }
 
 function setup(){
@@ -19,6 +21,8 @@ function setup(){
     engine = Engine.create();
     world = engine.world;
 
+
+   
 
     ground = new Ground(600,height,1200,20);
     platform = new Ground(150, 305, 300, 170);
@@ -45,7 +49,10 @@ function setup(){
 }
 
 function draw(){
+
+    if(backgroundImg)
     background(backgroundImg);
+
     Engine.update(engine);
     //strokeWeight(4);
     box1.display();
@@ -85,4 +92,36 @@ function keyPressed(){
     if(keyCode === 32){
        // slingshot.attach(bird.body);
     }
+}
+
+//Application programming interface - API- promise of information
+//synchronous asynchronous
+async function changeBackground(){
+
+    var response =await fetch("http://worldtimeapi.org/api/timezone/Australia/Sydney");
+    console.log(response);//
+
+    var responseJSON = await response.json();
+    console.log(responseJSON);
+    
+    var Date_time = responseJSON.datetime;
+    console.log(Date_time);
+
+    var hour = Date_time.slice(11,13);
+
+
+    //based on the hour , write if condition to change the background
+    //eg if time is 6pm chose a dark background else chose sunny background
+
+    if(hour < 16 && hour > 07) {
+            bg = "sprites/bg.png";
+
+    } 
+    else  {
+            bg = "sprites/bg2.jpg";
+    }
+    
+         backgroundImg = loadImage(bg);
+         
+
 }
